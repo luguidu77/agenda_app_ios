@@ -32,6 +32,6 @@ workflows:
     publishing:
       email:
         recipients:
-          - name@example.com
+          - luguidu77@gmail.com
       scripts:
         - echo 'Post-publish script'

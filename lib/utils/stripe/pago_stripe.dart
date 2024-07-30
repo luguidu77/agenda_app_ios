@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_stripe/flutter_stripe.dart';
 
@@ -14,17 +15,15 @@ class StripeService {
   static String apiBase = 'https://api.stripe.com/v1';
   static String paymentApiUrl = '${StripeService.apiBase}/payment_intents';
   static Uri paymentApiUri = Uri.parse(paymentApiUrl);
-  static String secret =
-      'sk_test_51JpFagEaW0pHhZCIc85qc0cj9mVnFK9wZPdjtoPXCVVf3dSHYfhvEf2RWD3W8MqJq6HgYUDfhKrKq3gVLoboyumt00GIMvQ8aJ';
-  //live secret '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'
+  static String secret = dotenv.env['STRIPE_PUBLISHABLE_KEY']!;
 
   static Map<String, String> headers = {
     'Authorization': 'Bearer ${StripeService.secret}',
     'Content-type': 'application/x-www-form-urlencoded'
   };
   static init() {
-    Stripe.publishableKey =
-        'pk_test_51JpFagEaW0pHhZCIp8tzFqDjH0brYcfQ9nOYHeD0DLj2yKZBnlm6lKC1RJ8hVCFQIwkzWdV3649C0s48cykqL1o200pPg6bhxh';
+    /*  Stripe.publishableKey =
+       */
     /* StripePayment.setOptions(StripeOptions(
         publishableKey:
             'pk_test_51JpFagEaW0pHhZCIp8tzFqDjH0brYcfQ9nOYHeD0DLj2yKZBnlm6lKC1RJ8hVCFQIwkzWdV3649C0s48cykqL1o200pPg6bhxh',

@@ -4,12 +4,6 @@ workflows:
   ios-build:
     name: iOS Build Workflow
     max_build_duration: 60 # minutos
-    triggers:
-      # Reemplaza `main` con la rama que deseas usar para los triggers de construcción
-      - git_push:
-          branches:
-            only:
-              - main
     jobs:
       - name: Install Dependencies
         script:

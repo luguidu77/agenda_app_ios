@@ -1,40 +1,57 @@
+version: 2.1
+
+# Configuración de la imagen de entorno de la máquina
+# Puedes especificar una imagen de contenedor personalizada si es necesario
+image: macos-latest
+
+# Definición de los trabajos de construcción y las configuraciones
 workflows:
-  agenda-app:
-    name: agenda de citas
-    instance_type: mac_mini_m1
-    max_build_duration: 60
-    inputs: # more information about build inputs:https://docs.codemagic.io/knowledge-codemagic/build-inputs/
-      name: # input ID
-        description: Input description
-        default: Codemagic
-    environment:
-      groups:
-        - group_name
-      vars:
-        PUBLIC_ENV_VAR: "value here"
-      flutter: stable
-      xcode: latest
-    cache:
-      cache_paths:
-        - ~/.pub-cache
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: '*'
-          include: true
-          source: true
-      cancel_previous_builds: false
-    scripts:
-      - echo "Hello, ${{ inputs.name }}"
+  ios-build:
+    name: iOS Build Workflow
+    max_build_duration: 60 # minutos
+    triggers:
+      # Ejecutar el flujo de trabajo en cada push a la rama 'main'
+      - schedule:
+          cron: "0 0 * * *" # cada día a medianoche
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - name: Install Dependencies
+        script:
+          - flutter pub get
+          - flutter doctor
+          - gem install cocoapods # Instala CocoaPods si no está ya instalado
+
+      - name: Build iOS App
+        script:
+          # Ejecutar el build para iOS
+          - flutter build ios --release --no-codesign
+
+      - name: Archive and Export iOS App
+        script:
+          # Archivar y exportar el archivo .ipa
+          - cd ios
+          - pod install
+          - cd ..
+          - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration AppStoreDistribution archive -archivePath $HOME/Runner.xcarchive
+          - xcodebuild -exportArchive -archivePath $HOME/Runner.xcarchive -exportOptionsPlist ios/ExportOptions.plist -exportPath $HOME/ipa
+          
+      - name: Upload to App Store Connect (Optional)
+        script:
+          # Solo si necesitas subir a App Store Connect
+          - gem install fastlane
+          - fastlane deliver --ipa $HOME/ipa/Runner.ipa --skip_screenshots --skip_metadata
+
     artifacts:
-      - build/ios/ipa/MyApp.ipa
-      - build/ios/simulator/MyApp.app
-      - build/macos/Build/Products/Release/MyApp.app
-      - build/ios/outputs/bundle/agenda.aab
-    publishing:
-      email:
-        recipients:
-          - luguidu77@gmail.com
-      scripts:
-        - echo 'Post-publish script'
+      - $HOME/ipa/*.ipa # Artifacts para descargar después de la build
+      - $HOME/Runner.xcarchive # Archivos de archivo (opcional)
+
+# Configuración para notificaciones y otros ajustes
+notifications:
+  email:
+    recipients:
+      - your-email@example.com
+    on_success: never
+    on_failure: always

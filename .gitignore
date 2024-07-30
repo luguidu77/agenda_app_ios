@@ -32,7 +32,6 @@
 /build/
 
 # Web related
-lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols
@@ -53,3 +52,4 @@ key.properties
 lib/screens/wallets
 /lib/screens/quitarPublicidadScreen.dart
 C:\Users\ritag\Documents\Agenda Citas Flutter\agendadecitas\assets\google_pay_payment_profile.json
+node_modules

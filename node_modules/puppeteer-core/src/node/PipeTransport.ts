@@ -1,33 +1,20 @@
 /**
- * Copyright 2018 Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * @license
+ * Copyright 2018 Google Inc.
+ * SPDX-License-Identifier: Apache-2.0
  */
-import {ConnectionTransport} from '../common/ConnectionTransport.js';
-import {
-  addEventListener,
-  debugError,
-  PuppeteerEventListener,
-  removeEventListeners,
-} from '../common/util.js';
+import type {ConnectionTransport} from '../common/ConnectionTransport.js';
+import {EventEmitter} from '../common/EventEmitter.js';
+import {debugError} from '../common/util.js';
 import {assert} from '../util/assert.js';
+import {DisposableStack} from '../util/disposable.js';
 
 /**
  * @internal
  */
 export class PipeTransport implements ConnectionTransport {
   #pipeWrite: NodeJS.WritableStream;
-  #eventListeners: PuppeteerEventListener[];
+  #subscriptions = new DisposableStack();
 
   #isClosed = false;
   #pendingMessage = '';
@@ -40,18 +27,26 @@ export class PipeTransport implements ConnectionTransport {
     pipeRead: NodeJS.ReadableStream
   ) {
     this.#pipeWrite = pipeWrite;
-    this.#eventListeners = [
-      addEventListener(pipeRead, 'data', buffer => {
-        return this.#dispatch(buffer);
-      }),
-      addEventListener(pipeRead, 'close', () => {
-        if (this.onclose) {
-          this.onclose.call(null);
-        }
-      }),
-      addEventListener(pipeRead, 'error', debugError),
-      addEventListener(pipeWrite, 'error', debugError),
-    ];
+    const pipeReadEmitter = this.#subscriptions.use(
+      // NodeJS event emitters don't support `*` so we need to typecast
+      // As long as we don't use it we should be OK.
+      new EventEmitter(pipeRead as unknown as EventEmitter<Record<string, any>>)
+    );
+    pipeReadEmitter.on('data', (buffer: Buffer) => {
+      return this.#dispatch(buffer);
+    });
+    pipeReadEmitter.on('close', () => {
+      if (this.onclose) {
+        this.onclose.call(null);
+      }
+    });
+    pipeReadEmitter.on('error', debugError);
+    const pipeWriteEmitter = this.#subscriptions.use(
+      // NodeJS event emitters don't support `*` so we need to typecast
+      // As long as we don't use it we should be OK.
+      new EventEmitter(pipeRead as unknown as EventEmitter<Record<string, any>>)
+    );
+    pipeWriteEmitter.on('error', debugError);
   }
 
   send(message: string): void {
@@ -88,6 +83,6 @@ export class PipeTransport implements ConnectionTransport {
 
   close(): void {
     this.#isClosed = true;
-    removeEventListeners(this.#eventListeners);
+    this.#subscriptions.dispose();
   }
 }

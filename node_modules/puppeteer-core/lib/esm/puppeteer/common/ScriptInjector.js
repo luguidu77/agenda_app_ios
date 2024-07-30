@@ -1,5 +1,13 @@
+/**
+ * @license
+ * Copyright 2024 Google Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 import { source as injectedSource } from '../generated/injected.js';
-class ScriptInjector {
+/**
+ * @internal
+ */
+export class ScriptInjector {
     #updated = false;
     #amendments = new Set();
     // Appends a statement of the form `(PuppeteerUtil) => {...}`.

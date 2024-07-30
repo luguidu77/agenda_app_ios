@@ -44,21 +44,23 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB1ryhTNEb2zpMKrFZiMsIAyasbK0gYrMA',
-    appId: '1:669231682418:web:1830cd6b8203d03bd7c3eb',
-    messagingSenderId: '669231682418',
-    projectId: 'flutter-varios-576e6',
-    authDomain: 'flutter-varios-576e6.firebaseapp.com',
-    databaseURL: 'https://flutter-varios-576e6-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutter-varios-576e6.appspot.com',
-  );
+      apiKey: "AIzaSyB1ryhTNEb2zpMKrFZiMsIAyasbK0gYrMA",
+      authDomain: "flutter-varios-576e6.firebaseapp.com",
+      databaseURL:
+          "https://flutter-varios-576e6-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "flutter-varios-576e6",
+      storageBucket: "flutter-varios-576e6.appspot.com",
+      messagingSenderId: "669231682418",
+      appId: "1:669231682418:web:1830cd6b8203d03bd7c3eb",
+      measurementId: "G-2TVLZN9MS3");
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDbR2Fm8mMy9be3VGyZ0_rI7C715uBMos0',
     appId: '1:669231682418:android:4d53e97fb4fc8f6bd7c3eb',
     messagingSenderId: '669231682418',
     projectId: 'flutter-varios-576e6',
-    databaseURL: 'https://flutter-varios-576e6-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://flutter-varios-576e6-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutter-varios-576e6.appspot.com',
   );
 
@@ -67,9 +69,11 @@ class DefaultFirebaseOptions {
     appId: '1:669231682418:ios:fd5a3e57b6230461d7c3eb',
     messagingSenderId: '669231682418',
     projectId: 'flutter-varios-576e6',
-    databaseURL: 'https://flutter-varios-576e6-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://flutter-varios-576e6-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutter-varios-576e6.appspot.com',
-    iosClientId: '669231682418-p9o4orcsj9kemcarupol383f2nad3c7u.apps.googleusercontent.com',
+    iosClientId:
+        '669231682418-p9o4orcsj9kemcarupol383f2nad3c7u.apps.googleusercontent.com',
     iosBundleId: 'com.example.agendacitas',
   );
 
@@ -78,9 +82,11 @@ class DefaultFirebaseOptions {
     appId: '1:669231682418:ios:6852f3d13d9db239d7c3eb',
     messagingSenderId: '669231682418',
     projectId: 'flutter-varios-576e6',
-    databaseURL: 'https://flutter-varios-576e6-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://flutter-varios-576e6-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutter-varios-576e6.appspot.com',
-    iosClientId: '669231682418-hu1rs884ve5po6ioogdiscdpq3u5d93b.apps.googleusercontent.com',
+    iosClientId:
+        '669231682418-hu1rs884ve5po6ioogdiscdpq3u5d93b.apps.googleusercontent.com',
     iosBundleId: 'agendadecitas.app.agendadecitas',
   );
 }

@@ -28,6 +28,9 @@ workflows:
     scripts:
       - echo "Hello, ${{ inputs.name }}"
     artifacts:
+      - build/ios/ipa/MyApp.ipa
+      - build/ios/simulator/MyApp.app
+      - build/macos/Build/Products/Release/MyApp.app
       - build/ios/outputs/bundle/agenda.aab
     publishing:
       email:

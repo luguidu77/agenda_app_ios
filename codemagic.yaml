@@ -28,7 +28,7 @@ workflows:
     scripts:
       - echo "Hello, ${{ inputs.name }}"
     artifacts:
-      -build/ios/outputs/bundle/agenda.aab
+      - build/ios/outputs/bundle/agenda.aab
     publishing:
       email:
         recipients:

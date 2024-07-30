@@ -1,26 +1,25 @@
-version: 2.1
+version: 2.0
 
 workflows:
   ios-build:
     name: Build and Archive iOS App
-    max_build_duration: 60 # minutos
     environment:
       flutter: stable
       xcode: latest
       cocoapods: stable
-    steps:
+    scripts:
       - name: Install Dependencies
-        run: |
+        script: |
           flutter pub get
           flutter doctor
           gem install cocoapods
 
       - name: Build iOS App
-        run: |
+        script: |
           flutter build ios --release --no-codesign
 
       - name: Archive iOS App
-        run: |
+        script: |
           cd ios
           pod install
           cd ..

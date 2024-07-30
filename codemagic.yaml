@@ -1,11 +1,11 @@
 version: 2.1
 
-# Definición de los flujos de trabajo
 workflows:
   ios-build:
     name: iOS Build Workflow
     max_build_duration: 60 # minutos
     triggers:
+      # Reemplaza `main` con la rama que deseas usar para los triggers de construcción
       - git_push:
           branches:
             only:
@@ -32,12 +32,3 @@ workflows:
     artifacts:
       - $HOME/ipa/*.ipa
       - $HOME/Runner.xcarchive
-
-    # Configuración de notificaciones (opcional)
-    notifications:
-      email:
-        recipients:
-          - your-email@example.com
-        on_success: never
-        on_failure: always
-

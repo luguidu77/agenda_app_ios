@@ -2,9 +2,32 @@ version: 2.1
 
 workflows:
   ios-build:
-    name: iOS Build Workflow
+    name: Build and Archive iOS App
     max_build_duration: 60 # minutos
-    
+    triggers:
+      - git_push:
+          branches:
+            only:
+              - main
+    jobs:
+      - name: Install Dependencies
+        commands:
+          - flutter pub get
+          - flutter doctor
+          - gem install cocoapods
+
+      - name: Build iOS App
+        commands:
+          - flutter build ios --release --no-codesign
+
+      - name: Archive iOS App
+        commands:
+          - cd ios
+          - pod install
+          - cd ..
+          - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration AppStoreDistribution archive -archivePath $HOME/Runner.xcarchive
+          - xcodebuild -exportArchive -archivePath $HOME/Runner.xcarchive -exportOptionsPlist ios/ExportOptions.plist -exportPath $HOME/ipa
+
     artifacts:
       - $HOME/ipa/*.ipa
       - $HOME/Runner.xcarchive
